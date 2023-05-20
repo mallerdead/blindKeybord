@@ -47,11 +47,14 @@ function getCountWords() {
 }
 
 function startGame() {
-  getWords(getCountWords(), words).then((item) => startPrint(item));
+  getWords(getCountWords(), words)
+    .then((item) => startPrint(item))
+    .catch((err) => console.error(err.message));
 }
 
 function startPrint(words) {
-  gameArea.innerHTML = `<span class="cursor"></span><div class="words">
+  let cursorPosition = 0;
+  gameArea.innerHTML = `<div class="words"><span class="cursor"></span>
   ${words
     .map(
       (word) =>
@@ -61,33 +64,46 @@ function startPrint(words) {
     )
     .join(`<div class="letter">&nbsp;</div>`)}
   </div>`;
-  let letters = Array.from(gameArea.querySelectorAll(".letter")).map((letter) =>
-    letter.innerHTML == "&nbsp;" ? " " : letter.innerHTML
-  );
+  let letters = gameArea.querySelectorAll(".letter");
   document.removeEventListener("keyup", startListener);
   document.addEventListener("keydown", (event) => {
-    console.log(letters[0].toUpperCase().charCodeAt());
-    console.log();
-
-    if (event.keyCode == letters[0].charCodeAt()) {
-      console.log(true);
+    if (
+      event.keyCode ==
+      letters[cursorPosition].innerHTML.toUpperCase().charCodeAt()
+    ) {
+      letters[cursorPosition].classList.add("correct", "active");
+      cursorPosition++;
+    } else {
+      letters[cursorPosition].classList.add("incorrect", "active");
+      cursorPosition++;
     }
+
+    document
+      .querySelectorAll(".letter.active")
+      .forEach((letter, index, arr) =>
+        arr.length - 1 == index
+          ? letter.classList.add("cursor")
+          : letter.classList.remove("cursor")
+      );
   });
 }
 
 async function getWords(count) {
-  let result = [];
-  let response = await fetch(
-    "https://random-word-api.vercel.app/api?words=500"
-  );
-  if (response.status == 200) {
-    let arr = await response.json();
-    for (let i = 0; i < count; i++) {
-      result[i] = arr[Math.floor(Math.random() * arr.length)];
+  try {
+    let result = [];
+    let response = await fetch(
+      "https://random-word-api.vercel.app/api?words=500"
+    );
+    if (response.ok) {
+      let arr = await response.json();
+      for (let i = 0; i < count; i++) {
+        result[i] = arr[Math.floor(Math.random() * arr.length)];
+      }
+      return result;
     }
-    return result;
+  } catch (err) {
+    throw Error("Нет ответа от сервера");
   }
-  throw Error("Нет ответа от сервера");
 }
 
 document.addEventListener("keyup", startListener);
