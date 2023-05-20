@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap%27");
+
+* {
+  margin: 0;
+  color: white;
+}
+button {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  font-size: 24px;
+}
+
+html {
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+}
+
+html,
+body {
+  min-height: 100vh;
+}
+
+.container,
+.content {
+  min-height: inherit;
+}
+
+.container {
+  background: -webkit-linear-gradient(90deg, #d82b56, #be264c, #920c2d);
+}
+
+.content {
+  background-color: #1b1b1b;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin: 0 auto;
+  border-end-end-radius: 20px;
+  border-end-start-radius: 20px;
+  background-color: #131313;
+  max-width: 70%;
+}
+
+/* Game-Area */
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  row-gap: 50px;
+}
+
+.typing-area {
+  display: flex;
+  color: #6b6d70;
+  max-width: 80%;
+  height: 90px;
+  overflow-y: hidden;
+}
+
+.words {
+  display: flex;
+  height: 30px;
+  flex-wrap: wrap;
+}
+
+.content {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.word {
+  display: flex;
+}
+
+.cursor {
+  height: 28px;
+  width: 2px;
+  background-color: white;
+  animation: cursorAnimate 1s infinite cubic-bezier(0.42, 0, 0.58, 1);
+  outline: none;
+}
+
+/* Game-Settings */
+
+.settings {
+  background-color: #131313;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  column-gap: 10px;
+  max-width: 80%;
+}
+
+.game-modes {
+  display: flex;
+}
+
+.game-mode-settings {
+  display: flex;
+  column-gap: 10px;
+}
+
+.game-mode,
+.game-mode-setting {
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.game-mode.active,
+.game-mode-setting.active {
+  color: #920c2d;
+  transition: all 0.3s;
+}
+
+.divider {
+  height: 29px;
+  width: 5px;
+  border-radius: 10px;
+  background-color: #1b1b1b;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 20px;
+  width: 100%;
+  align-items: center;
+}
+.logo-img {
+  width: 40%;
+}
+
+.logo-img img {
+  width: 100%;
+}
+
+.logo-name {
+  background: -webkit-linear-gradient(90deg, #d82b56, #be264c, #920c2d);
+  -webkit-text-stroke: 0.5px yellow;
+  text-shadow: 1px 1px 30px rgba(255, 255, 0, 0.4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 26 px;
+  text-align: center;
+  font-weight: 700;
+}
+
+@keyframes cursorAnimate {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
