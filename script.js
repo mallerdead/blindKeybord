@@ -9,6 +9,7 @@ let startListener = (event) => {
     startGame();
   }
 };
+
 gameModeSettingsBtn.forEach((btn) =>
   btn.addEventListener("click", () => {
     if (btn.classList.contains("active")) {
@@ -53,8 +54,9 @@ function startGame() {
 }
 
 function startPrint(words) {
+  document.removeEventListener("keyup", startListener);
   let cursorPosition = 0;
-  gameArea.innerHTML = `<div class="words"><span class="cursor"></span>
+  gameArea.innerHTML = `<div class="words">
   ${words
     .map(
       (word) =>
@@ -65,27 +67,59 @@ function startPrint(words) {
     .join(`<div class="letter">&nbsp;</div>`)}
   </div>`;
   let letters = gameArea.querySelectorAll(".letter");
-  document.removeEventListener("keyup", startListener);
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.keyCode ==
-      letters[cursorPosition].innerHTML.toUpperCase().charCodeAt()
-    ) {
+  let printListener = (event) => {
+    let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
+    console.log(event.keyCode);
+    if (event.keyCode == 8 && cursorPosition) {
+      cursorPosition--;
+      document
+        .querySelectorAll(".letter.active")
+        .forEach((letter, index, arr) => {
+          if (arr.length - 1 == index) {
+            letter.classList.remove("cursor", "active", "correct", "incorrect");
+          } else if (arr.length - 2 == index) {
+            letter.classList.add("cursor");
+          }
+        });
+    } else if (event.keyCode == currentLetter.charCodeAt()) {
       letters[cursorPosition].classList.add("correct", "active");
       cursorPosition++;
+      document
+        .querySelectorAll(".letter.active")
+        .forEach((letter, index, arr) =>
+          arr.length - 1 == index
+            ? letter.classList.add("cursor")
+            : letter.classList.remove("cursor")
+        );
+    } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
+      letters[cursorPosition].classList.add("correct", "active");
+      cursorPosition++;
+      document
+        .querySelectorAll(".letter.active")
+        .forEach((letter, index, arr) =>
+          arr.length - 1 == index
+            ? letter.classList.add("cursor")
+            : letter.classList.remove("cursor")
+        );
     } else {
       letters[cursorPosition].classList.add("incorrect", "active");
       cursorPosition++;
+      document
+        .querySelectorAll(".letter.active")
+        .forEach((letter, index, arr) =>
+          arr.length - 1 == index
+            ? letter.classList.add("cursor")
+            : letter.classList.remove("cursor")
+        );
     }
 
-    document
-      .querySelectorAll(".letter.active")
-      .forEach((letter, index, arr) =>
-        arr.length - 1 == index
-          ? letter.classList.add("cursor")
-          : letter.classList.remove("cursor")
-      );
-  });
+    if (cursorPosition == letters.length) {
+      document.removeEventListener("keydown", printListener);
+      startGame();
+    }
+  };
+
+  document.addEventListener("keydown", printListener);
 }
 
 async function getWords(count) {
