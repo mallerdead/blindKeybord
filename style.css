@@ -83,12 +83,12 @@ body {
   color: #be264c;
 }
 
-.letter.active.cursor::after {
+.letter.cursor::before {
   content: "";
+  background-color: white;
   position: absolute;
   height: 28px;
   width: 2px;
-  background-color: white;
 }
 
 .content {
