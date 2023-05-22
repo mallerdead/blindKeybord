@@ -69,54 +69,68 @@ function startPrint(words) {
   let letters = gameArea.querySelectorAll(".letter");
   let printListener = (event) => {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
-    console.log(event.keyCode);
     if (event.keyCode == 8 && cursorPosition) {
+      letters[cursorPosition].classList.remove("cursor");
+      letters[cursorPosition - 1].classList.remove(
+        "correct",
+        "incorrect",
+        "active"
+      );
       cursorPosition--;
-      document
-        .querySelectorAll(".letter.active")
-        .forEach((letter, index, arr) => {
-          if (arr.length - 1 == index) {
-            letter.classList.remove("cursor", "active", "correct", "incorrect");
-          } else if (arr.length - 2 == index) {
-            letter.classList.add("cursor");
-          }
-        });
     } else if (event.keyCode == currentLetter.charCodeAt()) {
       letters[cursorPosition].classList.add("correct", "active");
       cursorPosition++;
-      document
-        .querySelectorAll(".letter.active")
-        .forEach((letter, index, arr) =>
-          arr.length - 1 == index
-            ? letter.classList.add("cursor")
-            : letter.classList.remove("cursor")
-        );
     } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
       letters[cursorPosition].classList.add("correct", "active");
       cursorPosition++;
-      document
-        .querySelectorAll(".letter.active")
-        .forEach((letter, index, arr) =>
-          arr.length - 1 == index
-            ? letter.classList.add("cursor")
-            : letter.classList.remove("cursor")
-        );
     } else {
       letters[cursorPosition].classList.add("incorrect", "active");
       cursorPosition++;
-      document
-        .querySelectorAll(".letter.active")
-        .forEach((letter, index, arr) =>
-          arr.length - 1 == index
-            ? letter.classList.add("cursor")
-            : letter.classList.remove("cursor")
-        );
     }
-
     if (cursorPosition == letters.length) {
       document.removeEventListener("keydown", printListener);
-      startGame();
+      document.querySelector(".words").innerHTML = `
+      <div class="word">
+        <div class="letter">P</div>
+        <div class="letter">r</div>
+        <div class="letter">e</div>
+        <div class="letter">s</div>
+        <div class="letter">s</div>
+      </div>
+      <div class="letter">&nbsp;</div>
+      <div class="word">
+        <div class="letter">s</div>
+        <div class="letter">p</div>
+        <div class="letter">a</div>
+        <div class="letter">c</div>
+        <div class="letter">e</div>
+      </div>
+      <div class="letter">&nbsp;</div>
+      <div class="word">
+        <div class="letter">t</div>
+        <div class="letter">o</div>
+      </div>
+      <div class="letter">&nbsp;</div>
+      <div class="word">
+        <div class="letter">s</div>
+        <div class="letter">t</div>
+        <div class="letter">a</div>
+        <div class="letter">r</div>
+        <div class="letter">t</div>
+      </div>`;
+      document.addEventListener("keyup", startListener);
     }
+
+    document
+      .querySelectorAll(".letter.active")
+      .forEach((letter, index, arr) => {
+        if (arr.length - 1 == index) {
+          letter.classList.remove("cursor");
+          letters[index + 1].classList.add("cursor");
+        } else {
+          letter.classList.remove("cursor");
+        }
+      });
   };
 
   document.addEventListener("keydown", printListener);
