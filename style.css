@@ -60,6 +60,7 @@ body {
 .typing-area {
   display: flex;
   max-width: 80%;
+  padding: 3px;
   height: 90px;
   overflow-y: hidden;
 }
@@ -87,6 +88,7 @@ body {
   content: "";
   background-color: white;
   position: absolute;
+  left: -1.5px;
   height: 28px;
   width: 2px;
 }
