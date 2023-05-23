@@ -72,20 +72,22 @@ function startPrint(words) {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
     let audio = new Audio();
     audio.src = "assets/sounds/keyClick.mp3";
-    audio.autoplay = true;
-
     if (event.keyCode == 8 && cursorPosition) {
       letters[cursorPosition].classList.remove("cursor");
       letters[cursorPosition-- - 1].classList.remove("correct", "incorrect");
+      audio.autoplay = true;
     } else if (event.keyCode == currentLetter.charCodeAt()) {
       letters[cursorPosition].classList.add("correct");
       letters[cursorPosition++].classList.remove("cursor");
+      audio.autoplay = true;
     } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
       letters[cursorPosition].classList.remove("cursor");
       letters[cursorPosition++].classList.add("correct");
-    } else {
+      audio.autoplay = true;
+    } else if (event.keyCode != 8) {
       letters[cursorPosition].classList.remove("cursor");
       letters[cursorPosition++].classList.add("incorrect");
+      audio.autoplay = true;
     }
 
     if (cursorPosition == letters.length) {
