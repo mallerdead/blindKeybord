@@ -78,6 +78,7 @@ body {
   left: -1.5px;
   height: 28px;
   width: 2px;
+  transition: all 0.1s;
 }
 
 .letter {

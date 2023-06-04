@@ -56,7 +56,7 @@ function startGame() {
 function startPrint(words) {
   document.removeEventListener("keyup", startListener);
   let cursorPosition = 0;
-  gameArea.innerHTML = `<div class="words"><div class="cursor-test"></div>
+  gameArea.innerHTML = `<div class="words"><div class="cursor-test" style="left: 1.5px"></div>
   ${words
     .map(
       (word) =>
@@ -68,31 +68,38 @@ function startPrint(words) {
   </div>`;
   let letters = gameArea.querySelectorAll(".letter");
   let cursor = gameArea.querySelector(".cursor-test");
-  letters[0].classList.add("cursor");
   let printListener = (event) => {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
     let audio = new Audio();
     audio.src = "assets/sounds/keyClick.mp3";
-    console.log(letters[cursorPosition].offsetWidth);
+    console.log();
     if (event.keyCode == 8 && cursorPosition) {
-      letters[cursorPosition].classList.remove("cursor");
       letters[cursorPosition-- - 1].classList.remove("correct", "incorrect");
+      cursor.style.left = `${
+        parseInt(cursor.style.left, 10) -
+        letters[cursorPosition].getBoundingClientRect().width
+      }px`;
       audio.autoplay = true;
     } else if (event.keyCode == currentLetter.charCodeAt()) {
       letters[cursorPosition].classList.add("correct");
-      letters[cursorPosition++].classList.remove("cursor");
-      console.log(parseInt(cursor.style.left, 10));
       cursor.style.left = `${
-        parseInt(cursor.style.left, 10) + letters[cursorPosition].offsetWidth
+        parseInt(cursor.style.left, 10) +
+        letters[cursorPosition++].getBoundingClientRect().width
       }px`;
       audio.autoplay = true;
     } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
-      letters[cursorPosition].classList.remove("cursor");
-      letters[cursorPosition++].classList.add("correct");
+      letters[cursorPosition].classList.add("correct");
+      cursor.style.left = `${
+        parseInt(cursor.style.left, 10) +
+        letters[cursorPosition++].getBoundingClientRect().width
+      }px`;
       audio.autoplay = true;
     } else if (event.keyCode != 8) {
-      letters[cursorPosition].classList.remove("cursor");
-      letters[cursorPosition++].classList.add("incorrect");
+      letters[cursorPosition].classList.add("incorrect");
+      cursor.style.left = `${
+        parseInt(cursor.style.left, 10) +
+        letters[cursorPosition++].getBoundingClientRect().width
+      }px`;
       audio.autoplay = true;
     }
 
@@ -128,8 +135,6 @@ function startPrint(words) {
           <div class="letter">t</div>
         </div>`;
       document.addEventListener("keyup", startListener);
-    } else {
-      letters[cursorPosition].classList.add("cursor");
     }
   };
 
