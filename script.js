@@ -56,7 +56,7 @@ function startGame() {
 function startPrint(words) {
   document.removeEventListener("keyup", startListener);
   let cursorPosition = 0;
-  gameArea.innerHTML = `<div class="words">
+  gameArea.innerHTML = `<div class="words"><div class="cursor-test"></div>
   ${words
     .map(
       (word) =>
@@ -67,11 +67,13 @@ function startPrint(words) {
     .join(`<div class="letter">&nbsp;</div>`)}
   </div>`;
   let letters = gameArea.querySelectorAll(".letter");
+  let cursor = gameArea.querySelector(".cursor-test");
   letters[0].classList.add("cursor");
   let printListener = (event) => {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
     let audio = new Audio();
     audio.src = "assets/sounds/keyClick.mp3";
+    console.log(letters[cursorPosition].offsetWidth);
     if (event.keyCode == 8 && cursorPosition) {
       letters[cursorPosition].classList.remove("cursor");
       letters[cursorPosition-- - 1].classList.remove("correct", "incorrect");
@@ -79,6 +81,10 @@ function startPrint(words) {
     } else if (event.keyCode == currentLetter.charCodeAt()) {
       letters[cursorPosition].classList.add("correct");
       letters[cursorPosition++].classList.remove("cursor");
+      console.log(parseInt(cursor.style.left, 10));
+      cursor.style.left = `${
+        parseInt(cursor.style.left, 10) + letters[cursorPosition].offsetWidth
+      }px`;
       audio.autoplay = true;
     } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
       letters[cursorPosition].classList.remove("cursor");
@@ -118,7 +124,7 @@ function startPrint(words) {
           <div class="letter">s</div>
           <div class="letter">t</div>
           <div class="letter">a</div>
-          <div class="letter">r</div>
+          <div class="-o">r</div>
           <div class="letter">t</div>
         </div>`;
       document.addEventListener("keyup", startListener);

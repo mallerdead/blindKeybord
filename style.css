@@ -61,14 +61,23 @@ body {
   display: flex;
   max-width: 80%;
   padding: 3px;
-  height: 90px;
+  height: 89px;
   overflow-y: hidden;
 }
 
 .words {
   display: flex;
+  position: relative;
   height: 30px;
   flex-wrap: wrap;
+}
+
+.cursor-test {
+  background-color: white;
+  position: absolute;
+  left: -1.5px;
+  height: 28px;
+  width: 2px;
 }
 
 .letter {
