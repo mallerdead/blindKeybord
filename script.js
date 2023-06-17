@@ -56,7 +56,7 @@ function startGame() {
 function startPrint(words) {
   document.removeEventListener("keyup", startListener);
   let cursorPosition = 0;
-  gameArea.innerHTML = `<div class="words"><div class="cursor-test" style="left: 1.5px"></div>
+  gameArea.innerHTML = `<div class="words">
   ${words
     .map(
       (word) =>
@@ -66,40 +66,35 @@ function startPrint(words) {
     )
     .join(`<div class="letter">&nbsp;</div>`)}
   </div>`;
+
   let letters = gameArea.querySelectorAll(".letter");
+
+  gameArea.insertAdjacentHTML(
+    "afterbegin",
+    `<div class="cursor-test" style="left: ${parseFloat(
+      letters[cursorPosition].getBoundingClientRect().left.toFixed(2) - 1.5,
+      2
+    )}px; top: ${parseFloat(
+      letters[cursorPosition].getBoundingClientRect().top.toFixed(2),
+      2
+    )}px">`
+  );
   let cursor = gameArea.querySelector(".cursor-test");
   let printListener = (event) => {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
     let audio = new Audio();
     audio.src = "assets/sounds/keyClick.mp3";
-    console.log();
     if (event.keyCode == 8 && cursorPosition) {
       letters[cursorPosition-- - 1].classList.remove("correct", "incorrect");
-      cursor.style.left = `${
-        parseInt(cursor.style.left, 10) -
-        letters[cursorPosition].getBoundingClientRect().width
-      }px`;
       audio.autoplay = true;
     } else if (event.keyCode == currentLetter.charCodeAt()) {
-      letters[cursorPosition].classList.add("correct");
-      cursor.style.left = `${
-        parseInt(cursor.style.left, 10) +
-        letters[cursorPosition++].getBoundingClientRect().width
-      }px`;
+      letters[cursorPosition++].classList.add("correct");
       audio.autoplay = true;
     } else if (event.keyCode == 32 && currentLetter == "&NBSP;") {
-      letters[cursorPosition].classList.add("correct");
-      cursor.style.left = `${
-        parseInt(cursor.style.left, 10) +
-        letters[cursorPosition++].getBoundingClientRect().width
-      }px`;
+      letters[cursorPosition++].classList.add("correct");
       audio.autoplay = true;
     } else if (event.keyCode != 8) {
-      letters[cursorPosition].classList.add("incorrect");
-      cursor.style.left = `${
-        parseInt(cursor.style.left, 10) +
-        letters[cursorPosition++].getBoundingClientRect().width
-      }px`;
+      letters[cursorPosition++].classList.add("incorrect");
       audio.autoplay = true;
     }
 
@@ -131,11 +126,18 @@ function startPrint(words) {
           <div class="letter">s</div>
           <div class="letter">t</div>
           <div class="letter">a</div>
-          <div class="-o">r</div>
+          <div class="letter">r</div>
           <div class="letter">t</div>
         </div>`;
       document.addEventListener("keyup", startListener);
     }
+    cursor.style.top = `${
+      letters[cursorPosition].getBoundingClientRect().top
+    }px`;
+    cursor.style.left = `${parseFloat(
+      letters[cursorPosition].getBoundingClientRect().left.toFixed(2) - 1.5,
+      2
+    )}px`;
   };
 
   document.addEventListener("keydown", printListener);
