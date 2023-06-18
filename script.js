@@ -56,6 +56,7 @@ function startGame() {
 function startPrint(words) {
   document.removeEventListener("keyup", startListener);
   let cursorPosition = 0;
+
   gameArea.innerHTML = `<div class="words">
   ${words
     .map(
@@ -66,9 +67,9 @@ function startPrint(words) {
     )
     .join(`<div class="letter">&nbsp;</div>`)}
   </div>`;
-
+  const wordsBar = gameArea.querySelector(".words");
   let letters = gameArea.querySelectorAll(".letter");
-
+  stringNumber = 1;
   gameArea.insertAdjacentHTML(
     "afterbegin",
     `<div class="cursor-test" style="left: ${parseFloat(
@@ -80,10 +81,12 @@ function startPrint(words) {
     )}px">`
   );
   let cursor = gameArea.querySelector(".cursor-test");
+  cursorTopPosition = cursor.getBoundingClientRect().top;
   let printListener = (event) => {
     let currentLetter = letters[cursorPosition].innerHTML.toUpperCase();
     let audio = new Audio();
     audio.src = "assets/sounds/keyClick.mp3";
+
     if (event.keyCode == 8 && cursorPosition) {
       letters[cursorPosition-- - 1].classList.remove("correct", "incorrect");
       audio.autoplay = true;
@@ -131,9 +134,10 @@ function startPrint(words) {
         </div>`;
       document.addEventListener("keyup", startListener);
     }
-    cursor.style.top = `${
-      letters[cursorPosition].getBoundingClientRect().top
-    }px`;
+    cursor.style.top = `${parseFloat(
+      letters[cursorPosition].getBoundingClientRect().top.toFixed(2),
+      2
+    )}px`;
     cursor.style.left = `${parseFloat(
       letters[cursorPosition].getBoundingClientRect().left.toFixed(2) - 1.5,
       2

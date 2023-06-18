@@ -61,13 +61,11 @@ body {
   display: flex;
   max-width: 80%;
   padding: 3px;
-  height: 89px;
   overflow-y: hidden;
 }
 
 .words {
   display: flex;
-  height: 30px;
   flex-wrap: wrap;
 }
 
