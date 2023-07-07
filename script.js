@@ -1,7 +1,7 @@
-const gameModeSettingsBtn = document.querySelectorAll(".game-mode-setting");
 const gameModesBtn = document.querySelectorAll(".game-mode");
-
+let gameModeSettingsBtn;
 const gameArea = document.querySelector(".typing-area");
+let timerEnd = 0;
 
 let words = [];
 
@@ -11,19 +11,23 @@ let startListener = (event) => {
   }
 };
 
-gameModeSettingsBtn.forEach((btn) =>
-  btn.addEventListener("click", () => {
-    if (btn.classList.contains("active")) {
-      return;
-    }
+const AddEventForBtn = () => {
+  gameModeSettingsBtn = document.querySelectorAll(".game-mode-setting");
+  gameModeSettingsBtn.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("active")) {
+        return;
+      }
 
-    gameModeSettingsBtn.forEach((item) => {
-      item.classList.remove("active");
-    });
+      gameModeSettingsBtn.forEach((item) => {
+        item.classList.remove("active");
+      });
 
-    btn.classList.add("active");
-  })
-);
+      btn.classList.add("active");
+    })
+  );
+};
+AddEventForBtn();
 
 gameModesBtn.forEach((btn) =>
   btn.addEventListener("click", () => {
@@ -36,13 +40,46 @@ gameModesBtn.forEach((btn) =>
     });
 
     btn.classList.add("active");
+    let gameBar = document.querySelector(".game-mode-settings");
+    switch (btn.innerHTML) {
+      case "word":
+        gameBar.innerHTML = `<div class="game-mode-settings">
+        <button class="game-mode-setting active">10</button>
+        <button class="game-mode-setting">25</button>
+        <button class="game-mode-setting">50</button>
+        <button class="game-mode-setting">100</button>
+      </div>`;
+        AddEventForBtn();
+        break;
+      case "time":
+        gameBar.innerHTML = `<div class="game-mode-settings">
+        <button class="game-mode-setting active">10</button>
+        <button class="game-mode-setting">20</button>
+        <button class="game-mode-setting">30</button>
+        <button class="game-mode-setting">60</button>
+      </div>`;
+        AddEventForBtn();
+        break;
+    }
   })
 );
 
 function getCountWords() {
+  let currentGameMode = "";
+  for (let i = 0; i < gameModesBtn.length; i++) {
+    if (gameModesBtn[i].classList.contains("active")) {
+      currentGameMode = gameModesBtn[i].innerHTML;
+    }
+  }
   for (let i = 0; i < gameModeSettingsBtn.length; i++) {
     if (gameModeSettingsBtn[i].classList.contains("active")) {
-      return +gameModeSettingsBtn[i].innerHTML;
+      switch (currentGameMode) {
+        case "word":
+          return +gameModeSettingsBtn[i].innerHTML;
+        case "time":
+          timerEnd = +gameModeSettingsBtn[i].innerHTML;
+          return 100;
+      }
     }
   }
   throw Error("Не выбран режим игры");
@@ -94,6 +131,7 @@ function startPrint(words) {
       gameModeWord(letters);
       break;
     case "time":
+      gameModeTime(letters);
       break;
     default:
       throw Error("Нет такого режима игры");
@@ -190,7 +228,7 @@ function gameModeTime(letters) {
     if (cursorPosition == letters.length) {
       document.removeEventListener("keydown", printListener);
       gameArea.innerHTML = `<div class="result">
-      <div class="time">Time: ${timeInSeconds}s / ${}</div>
+      <div class="time">Time: ${timeInSeconds}s /   </div>
       <div class="correct-symbol">Correct: ${correctSymbol}</div>
       <div class="incorrect-symbol">Incorrect: ${incorrectSymbol}</div>
       <div>Press Space to restart</div>
@@ -209,8 +247,21 @@ function gameModeTime(letters) {
     }
   };
 
-  setInterval(() => {
+  timer = setInterval(() => {
     timeInSeconds++;
+    if (timeInSeconds >= timerEnd) {
+      document.removeEventListener("keydown", printListener);
+      clearInterval(timer);
+      gameArea.innerHTML = `<div class="result">
+        <div class="time">Time: ${timeInSeconds}s / ${timerEnd} </div>
+        <div class="correct-symbol">Correct: ${correctSymbol}</div>
+        <div class="incorrect-symbol">Incorrect: ${incorrectSymbol}</div>
+        <div>Press Space to restart</div>
+      </div>
+      `;
+
+      document.addEventListener("keyup", startListener);
+    }
   }, 1000);
 
   document.addEventListener("keydown", printListener);
